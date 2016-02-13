@@ -62,13 +62,14 @@ call(last_hr_shp2pgsql, shell = True)
 
 #----Snow accumulation grb formating and importing for geospatial processes---------------#
 
+#Note these accumlations can be oberserved over a 12, 24, 48, 72 hour time frame
 
-##pull snow accumulation data in grb format
+##pull snow accumulation data from NOAA server in grb format
 
-os.system("wget ftp://ftp.hpc.ncep.noaa.gov/pwpf/conus_2.5km/2.5kmpwpf_12hr/2.5kmpicez_2016021000f012.grb")
+os.system("wget ftp://ftp.hpc.ncep.noaa.gov/pwpf/conus_2.5km/2.5kmpwpf_48hr/2.5kmpicez48_2016021312f072.grb")
 
 #Translate grb it into Geotiff and project to EPSG:4326
-os.system("gdalwarp -t_srs EPSG:4326 2.5kmpicez_2016021000f012.grb snow_accum_4326.tif")
+os.system("gdalwarp -t_srs EPSG:4326 2.5kmpicez48_2016021312f072.grb snow_accum_4326.tif")
 
 #Convert and clip the raster into a vector format for a county
 os.system("gdalwarp -cutline buncombe_county.shp snow_accum_4326.tif bc_snow_accum_4326.tif")
@@ -109,13 +110,13 @@ ham_cur = conn.cursor()
 
 #creating views that show where the roads are potentially flooded or exposed to icy conditions
 
-ham_cur.execute("""CREATE VIEW prcp_roads AS
+ham_cur.execute("""CREATE table prcp_rd AS
  				 SELECT p.wkb_geometry FROM last_hr_prcp as p
  				 JOIN buncombe_streets_4326 as streets 
  				 on ST_Contains(p.wkb_geometry,streets.geom);""")
 
 
-ham_cur.execute("""CREATE VIEW icy_roads AS
+ham_cur.execute("""CREATE table icy_roads AS
  				 SELECT snw.wkb_geometry FROM snow_accum AS
  				 snw JOIN buncombe_streets_4326 as streets 
  				 on ST_intersects(snw.wkb_geometry, streets.geom);""")
