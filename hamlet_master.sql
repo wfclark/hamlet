@@ -108,7 +108,7 @@ print "Connected!\n"
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 ham_cur = conn.cursor()
 
-#creating views that show where the roads are potentially flooded or exposed to icy conditions
+#creatie tables that show where the roads are potentially flooded or exposed to icy conditions
 
 ham_cur.execute("""CREATE table prcp_rd AS
  				 SELECT p.wkb_geometry FROM last_hr_prcp as p
