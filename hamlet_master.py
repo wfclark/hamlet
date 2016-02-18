@@ -49,8 +49,13 @@ os.system("mv last_1_hours.tar.gz last_1_hours.tar")
 #Expand tar file
 os.system("tar xvf last_1_hours.tar")
 
-#Name of extracted GIS layer for the last hour of precip. This shapefile will be used as the indepedent variable to intersect on to the depedent variables of the street features and impervious surfaces polygon. This of course is being done here in Buncombe County North Carolina.These intersections will determine where r traffic might be due to the current driving conditions. As well as a notification system that tells the user which roads not to take. These kinds of geospatial processes can be applied to a variety of industrial problems such as the money lost due to buisness interruptions. For example this tool could be used to predict the amount of weather induced delays that a cargo ship could run into when trying to arrive to port. If there is a delay in the cargo, the supply, then there would be a shortage to the demand. This weather induced shortage of supplies could potentially cause a change in corporations stock on the market.
-
+#Name of extracted GIS layer for the last hour of precip. 
+#This shapefile will be used as the indepedent variable to intersect on to the depedent variables of the street features and impervious surfaces polygon. 
+#This of course is being done here in Buncombe County North Carolina.These intersections will determine where r traffic might be due to the current driving conditions. 
+#As well as a notification system that tells the user which roads not to take. These kinds of geospatial processes can be applied to a variety of industrial problems such as the money lost due to buisness interruptions. 
+#For example this tool could be used to predict the amount of weather induced delays that a cargo ship could run into when trying to arrive to port. 
+#If there is a delay in the cargo, the supply, then there would be a shortage to the demand. This weather induced shortage of supplies could potentially cause a change in corporations stock on the market.
+#Another example would be to track how much rainfall there was in a day on a certain crop type to see if they have been suffieciently watered.
 last_hr_shp = '"/home/wclark/models/hamlet/scripts/latest/last_1_hours.shp"'
 
 last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=9502f8c6-ca21-44d7-bf02-2d5a7dc471fa"'+ ' '+ last_hr_shp  + ' ' + '-t_srs EPSG:4326 -nln last_hr_prcp'
