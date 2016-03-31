@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html>
-
 <head>
 
 <meta charset=utf-8 />
@@ -31,7 +28,7 @@
 <link href='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.css' rel='stylesheet' />
 
 <link href="http://fonts.googleapis.com/css?family=Lobster+Two" rel="stylesheet" type="text/css"/>
-
+--!> 
 
 
 
@@ -206,39 +203,39 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoid2ZjbGFyazIiLCJhIjoiU1dJakY2VSJ9.y9sbqDVvPJOC
 
   var hazards = { 
 
-    Roads : L.tileLayer.wms('http://ec2-52-36-196-184.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
+    Last_Hour : L.tileLayer.wms('http://ec2-52-34-179-131.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
         format: 'image/png',
         transparent: true,
-        layers: 'opengeo:hislr1'
+        layers: 'opengeo:last_hr_prcp'
       }),
   
-     Hospitals : L.tileLayer.wms('http://ec2-52-36-196-184.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
+     Building_Footprints : L.tileLayer.wms('http://ec2-52-34-179-131.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
         format: 'image/png',
         transparent: true,
-        layers: 'opengeo:hislr2'
+        layers: 'opengeo:building_footprints'
       }),
   
-      Energy : L.tileLayer.wms('http://ec2-52-36-196-184.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
+      Streets : L.tileLayer.wms('http://ec2-52-34-179-131.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
         format: 'image/png',
         transparent: true,
-        layers: 'opengeo:hislr3'
+        layers: 'opengeo:buncombe_streets_4326'
       }),
   
-      Threats  : L.tileLayer.wms('http://ec2-52-36-196-184.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
+      Buncombe_county  : L.tileLayer.wms('http://ec2-52-34-179-131.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
         format: 'image/png',
         transparent: true,
-        layers: 'opengeo:hawaii_county_slr3'
+        layers: 'opengeo:buncombe_county_4326'
       }),
       
-       Warnings : L.tileLayer.wms('http://ec2-52-36-196-184.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
+       Roads_being_rained_on : L.tileLayer.wms('http://ec2-52-34-179-131.us-west-2.compute.amazonaws.com:8080/geoserver/opengeo/wms?', {
         format: 'image/png',
         transparent: true,
-        layers: 'opengeo:hawaii_county_slr4'
+        layers: 'opengeo:prcp_rd'
       })
     };
 
 
-  basemaps.Streets.addTo(map);
+  basemaps.Satellite.addTo(map);
   L.control.layers(basemaps, hazards).addTo(map);
 
 
@@ -272,9 +269,6 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoid2ZjbGFyazIiLCJhIjoiU1dJakY2VSJ9.y9sbqDVvPJOC
    onkeydown="if (event.keyCode == 13) document.getElementById('address_lookup').click()"
    placeholder="Go to a certain place...">
 </div>
-
-
-
 </body>
-</html>
+ </html>
 
