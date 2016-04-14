@@ -35,10 +35,10 @@ ham_cur = conn.cursor()
 
 #creating views that show where the roads are potentially flooded or exposed to icy conditions
 
-ham_cur.execute("""CREATE or replace view prcp_rd AS
- 				 SELECT st_dwithin(roads.geom, last_hr_prcp.wkb_geometry, 2500)  FROM roads, last_hr_prcp;""")
+ham_cur.execute("""create or replace view last_hr_heavy as select * from last_hr_prcp where globvalue >= .25;""")
 
-
+ham_cur.execute("""create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500)""")
+ 				 
 conn.commit()
 ham_cur.close()
 
