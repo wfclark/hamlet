@@ -38,7 +38,19 @@ ham_cur = conn.cursor()
 ham_cur.execute("""create or replace view last_hr_heavy as select * from last_hr_prcp where globvalue >= .25;""")
 
 ham_cur.execute("""create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500)""")
- 				 
+
+ham_cur.execute("""SELECT
+  a.gid AS roads,
+  b.id AS last_hr_heavy,
+  CASE 
+     WHEN ST_Within(a.geom,b.wkb_geometry) 
+     THEN a.geom
+     ELSE ST_Multi(ST_Intersection(a.geom,b.wkb_geometry)) 
+  END AS geom
+FROM roads as a ,last_hr_heavy as b 
+where st_dwithin(a.geom, b.wkb_geometry, 2500);
+""")
+	 
 conn.commit()
 ham_cur.close()
 
