@@ -35,20 +35,25 @@ ham_cur = conn.cursor()
 
 #creating views that show where the roads are potentially flooded or exposed to icy conditions
 
-ham_cur.execute("""create or replace view last_hr_heavy as select * from last_hr_prcp where globvalue >= .25;""")
+ham_cur.execute("""create or replace view last_hr_heavy as 
+select ogc_fid, id, lat,lon,
+st_buffer(wkb_geometry::geography, 2500) as geom
+from last_hr_prcp
+where globvalue >= .25;""")
 
 ham_cur.execute("""create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500)""")
 
 ham_cur.execute("""SELECT
-  a.gid AS roads,
-  b.id AS last_hr_heavy,
+  a.geom,
+  b.geom,
   CASE 
-     WHEN ST_Within(a.geom,b.wkb_geometry) 
+     WHEN ST_Within(a.geom, b.geom::geometry) 
      THEN a.geom
-     ELSE ST_Multi(ST_Intersection(a.geom,b.wkb_geometry)) 
+     ELSE ST_Multi(ST_Intersection(a.geom,b.geom::geometry)) 
   END AS geom
-FROM roads as a ,last_hr_heavy as b 
-where st_dwithin(a.geom, b.wkb_geometry, 2500);
+FROM roads as a 
+join last_hr_heavy as b 
+on st_intersects(a.geom, b.geom::geometry);
 """)
 	 
 conn.commit()
