@@ -31,33 +31,89 @@ except Exception as e:
 
 print "Connected!\n"
 
-ham_cur = conn.cursor()
+drop_cur = conn.cursor()
 
 #creating views that show where the roads are potentially flooded or exposed to icy conditions
 
-ham_cur.execute("""create or replace view last_hr_heavy as 
-select ogc_fid, id, lat,lon,
-st_buffer(wkb_geometry::geography, 2500) as geom
-from last_hr_prcp
-where globvalue >= .25;""")
+drop_cur.execute("""drop table if exists roads_flooded_bunco cascade;""")
 
-ham_cur.execute("""create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500)""")
+drop_cur.execute("""drop table if exists roads_flooded_se_heavy cascade;""")
 
-ham_cur.execute("""SELECT
-  a.geom,
-  b.geom,
-  CASE 
-     WHEN ST_Within(a.geom, b.geom::geometry) 
-     THEN a.geom
-     ELSE ST_Multi(ST_Intersection(a.geom,b.geom::geometry)) 
-  END AS geom
-FROM roads as a 
-join last_hr_heavy as b 
-on st_intersects(a.geom, b.geom::geometry);
-""")
-	 
+drop_cur.execute("""drop table if exists roads_flooded_se_moderate cascade;""")
+
+drop_cur.execute("""drop table if exists roads_flooded_se_light cascade;""")
+
+drop_cur.execute("""drop table if exists roads_flooded_se_drizzle cascade;""")
+
 conn.commit()
-ham_cur.close()
+drop_cur.close()
+
+flooded_cur = conn.cursor() 
+
+flooded_cur.execute("""
+create table roads_flooded_bunco as 
+select
+a.gid,
+street_nam,
+sum(b.globvalue),
+a.geom
+from conterlines_poly as a
+inner join last_hr_prcp as b 
+on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
+group by a.gid, a.street_nam, a.geom;""")
+
+flooded_cur.execute("""create table roads_flooded_se_heavy as 
+select
+gid
+street_nam,
+sum(b.globvalue),
+a.geom
+from se_road_polys as a
+inner join last_hr_prcp as b 
+on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
+where b.globvalue >= 1
+group by a.gid, a.geom;""")
+
+flooded_cur.execute("""create table roads_flooded_se_moderate as 
+select
+gid
+street_nam,
+sum(b.globvalue),
+a.geom
+from se_road_polys as a
+inner join last_hr_prcp as b 
+on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
+where b.globvalue >= .5
+group by a.gid, a.geom;
+""")
+
+flooded_cur.execute("""create table roads_flooded_se_light as 
+select
+gid
+street_nam,
+sum(b.globvalue),
+a.geom
+from se_road_polys as a
+inner join last_hr_prcp as b 
+on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
+where b.globvalue >= .25
+group by a.gid, a.geom;""")
+
+flooded_cur.execute("""create table roads_flooded_se_drizzle as 
+select
+gid
+street_nam,
+sum(b.globvalue),
+a.geom
+from se_road_polys as a
+inner join last_hr_prcp as b 
+on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
+where b.globvalue >= .1 and b.globvalue <= .25
+group by a.gid, a.geom;""")
+
+
+conn.commit()
+flooded_cur.close()
 
 
 # ICE STUFF
