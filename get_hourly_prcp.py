@@ -56,18 +56,18 @@ street_nam,
 sum(b.globvalue),
 a.geom
 from conterlines_poly as a
-inner join last_hr_prcp as b 
+inner join last_1hr_qpe as b 
 on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
 group by a.gid, a.street_nam, a.geom;""")
 
 flooded_cur.execute("""create table roads_flooded_se_heavy as 
 select
 gid
-street_nam,
+route_id::character varying,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
-inner join last_hr_prcp as b 
+inner join last_1hr_qpe as b 
 on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
 where b.globvalue >= 1
 group by a.gid, a.geom;""")
@@ -75,11 +75,11 @@ group by a.gid, a.geom;""")
 flooded_cur.execute("""create table roads_flooded_se_moderate as 
 select
 gid
-street_nam,
+route_id::character varying,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
-inner join last_hr_prcp as b 
+inner join last_1hr_qpe as b 
 on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
 where b.globvalue >= .5
 group by a.gid, a.geom;
@@ -88,11 +88,11 @@ group by a.gid, a.geom;
 flooded_cur.execute("""create table roads_flooded_se_light as 
 select
 gid
-street_nam,
+route_id::character varying,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
-inner join last_hr_prcp as b 
+inner join last_1hr_qpe as b 
 on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
 where b.globvalue >= .25
 group by a.gid, a.geom;""")
@@ -100,14 +100,14 @@ group by a.gid, a.geom;""")
 flooded_cur.execute("""create table roads_flooded_se_drizzle as 
 select
 gid
-street_nam,
+route_id::character varying,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
-inner join last_hr_prcp as b 
+inner join last_1hr_qpe as b 
 on st_dwithin(a.geom::geometry(MULTIpolygon, 4326), b.wkb_geometry::geometry(point, 4326), 0.025)
 where b.globvalue >= .1 and b.globvalue <= .25
-group by a.gid, a.geom;""")
+group by a.gid""")
 
 
 conn.commit()
