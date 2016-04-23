@@ -3,9 +3,9 @@ create or replace view last_hr_heavy as
 select ogc_fid, id, lat,lon,
 st_buffer(wkb_geometry::geography, 2500) as geom
 from last_hr_prcp
-where globvalue >= .25;""")
+where globvalue >= .25;
 
-create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500)
+create or replace view select * from roads, last_hr_heavy where st_dwithin(roads.geom, last_hr_heavy.wkb_geometry, 2500);
 
 SELECT
   a.geom,
