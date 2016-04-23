@@ -11,68 +11,11 @@ os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last
 os.system("mv last_1_hours.tar.gz last_1_hours.tar")
 os.system("tar xvf last_1_hours.tar")
 
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last_2_hours.tar.gz -O last_2_hours.tar.gz")
-os.system("mv last_2_hours.tar.gz last_2_hours.tar")
-os.system("tar xvf last_2_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last_3_hours.tar.gz -O last_3_hours.tar.gz")
-os.system("mv last_3_hours.tar.gz last_3_hours.tar")
-os.system("tar xvf last_3_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last_6_hours.tar.gz -O last_6_hours.tar.gz")
-os.system("mv last_6_hours.tar.gz last_6_hours.tar")
-os.system("tar xvf last_6_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last_12_hours.tar.gz -O last_12_hours.tar.gz")
-os.system("mv last_12_hours.tar.gz last_12_hours.tar")
-os.system("tar xvf last_12_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/last_24_hours.tar.gz -O last_24_hours.tar.gz")
-os.system("mv last_24_hours.tar.gz last_24_hours.tar")
-os.system("tar xvf last_24_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpfshp/latest/latest_rqpf_f006.tar.gz.tar.gz -O latest_rqpf_f006.tar.tar.gz")
-os.system("mv last_12_hours.tar.gz last_12_hours.tar")
-os.system("tar xvf last_12_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/latest_rqpf_f012.tar.gz -O latest_rqpf_f012.tar.gz")
-os.system("mv last_24_hours.tar.gz last_24_hours.tar")
-os.system("tar xvf last_24_hours.tar")
-
-os.system("wget http://www.srh.noaa.gov/ridge2/Precip/qpehourlyshape/latest/latest_rqpf_f024.tar.gz -O latest_rqpf_f024.tar.gz")
-os.system("mv last_24_hours.tar.gz last_24_hours.tar")
-os.system("tar xvf last_24_hours.tar")
-
 last_1hr_shp = './latest/last_1_hours.shp'
 last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_1hr_qpe -overwrite'.format(last_1hr_shp)
 print last_hr_shp2pgsql
 call(last_hr_shp2pgsql, shell = True)
 
-last_2hr_shp = './latest/last_2_hours.shp'
-last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_2hr_qpe -overwrite'.format(last_2hr_shp)
-print last_hr_shp2pgsql
-call(last_hr_shp2pgsql, shell = True)
-
-last_3hr_shp = './latest/last_3_hours.shp'
-last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_3hr_qpe -overwrite'.format(last_3hr_shp)
-print last_hr_shp2pgsql
-call(last_hr_shp2pgsql, shell = True)
-
-last_6hr_shp = './latest/last_6_hours.shp'
-last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_3hr_qpe -overwrite'.format(last_6hr_shp)
-print last_hr_shp2pgsql
-call(last_hr_shp2pgsql, shell = True)
-
-last_12hr_shp = './latest/last_12_hours.shp'
-last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_12hr_qpe -overwrite'.format(last_12hr_shp)
-print last_hr_shp2pgsql
-call(last_hr_shp2pgsql, shell = True)
-
-last_24hr_shp = './latest/last_24_hours.shp'
-last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_24hr_qpe -overwrite'.format(last_24hr_shp)
-print last_hr_shp2pgsql
-call(last_hr_shp2pgsql, shell = True)
-# Begin geospatial analysis with PostGIS
 
 conn_string = "dbname='hamlet' user=postgres port='5432' host='127.0.0.1' password='password'"
 
@@ -167,4 +110,5 @@ where b.globvalue >= .1 and b.globvalue <= .25
 group by a.gid, a.geom;""")
 
 
-
+conn.commit()
+flooded_cur.close()
