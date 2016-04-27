@@ -63,7 +63,7 @@ group by a.gid, a.street_nam, a.geom;""")
 flooded_cur.execute("""create table roads_flooded_se_heavy as 
 select
 gid
-route_id::character varying,
+route_id,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
@@ -75,7 +75,7 @@ group by a.gid, a.geom;""")
 flooded_cur.execute("""create table roads_flooded_se_moderate as 
 select
 gid
-route_id::character varying,
+route_id,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
@@ -88,7 +88,7 @@ group by a.gid, a.geom;
 flooded_cur.execute("""create table roads_flooded_se_light as 
 select
 gid
-route_id::character varying,
+route_id,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
@@ -100,7 +100,7 @@ group by a.gid, a.geom;""")
 flooded_cur.execute("""create table roads_flooded_se_drizzle as 
 select
 gid
-route_id::character varying,
+route_id,
 sum(b.globvalue),
 a.geom
 from se_road_polys as a
