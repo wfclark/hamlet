@@ -14,7 +14,7 @@ drop view if exists vw_quadrent_3 cascade;
 drop view if exists vw_quadrent_4 cascade;
 
 create or replace view vw_quadrent_1 as 
-select gid, st_buffer(geom, (select distinct atc_w34_r1 from hurricane_irene limit 1))::geometry(polygon,4326) as geom from hurricane_irene limit 1;
+select gid, st_buffer(geom, (select distinct atc_w34_r1 from hurricane_irene where gid = '282105' ))::geometry(polygon,4326) as geom from hurricane_irene where gid = '282105';
 
 create or replace view vw_quadrent_2 as
 select gid, st_buffer(geom, (select distinct atc_w34_r2 from hurricane_irene limit 1))::geometry(polygon,4326) as geom from hurricane_irene limit 1;
