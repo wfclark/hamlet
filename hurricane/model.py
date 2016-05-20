@@ -13,12 +13,6 @@ from subprocess import call, Popen
 
 #os.system("tar xvf last_1_hours.tar")
 
-
-#last_1hr_shp = './latest/last_1_hours.shp'
-#last_hr_shp2pgsql = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_1hr_qpe -overwrite'.format(last_1hr_shp)
-#print last_hr_shp2pgsql
-#call(last_hr_shp2pgsql, shell = True)
-
 conn_string = "dbname='hamlethurricane' user=postgres port='5432' host='127.0.0.1' password='password'"
 
 print "Connecting to database..."
@@ -66,14 +60,19 @@ print test
 
 # print range_feat_strp_v2
 
-bash = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
-
-
+bash_deconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
 
 # print bash
 
-os.system(bash) 
-	
+call(bash_deconstruct, shell = True) 
+
+print bash_deconstruct
+
+bash_reconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlet password=password" irene_$i.shp -t_srs EPSG:4326; done'
+
+print bash_reconstruct
+
+call(bash_reconstruct, shell = True)
 
 #os.system('pgsql2shp -f {}.shp -g geom -h 127.0.0.1 -u postgres -p 5432 -P password hamlethurricane "Select * from hurricane_irene where id =  "; done'
 
