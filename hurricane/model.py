@@ -1,4 +1,3 @@
-
 import sys
 import os
 import urllib2
@@ -52,8 +51,27 @@ conn.commit()
 
 num_feat = len(data)
 
-for i in range(len(data))
-	os.system('pgsql2shp -f {} -u postgres dbname=hamlet password=password" {} -t_srs EPSG:4326 -nln last_1hr_qpe -overwrite ').
+range_feat =  range(num_feat)
+
+range_feat_strp = str(range_feat).strip('[]')
+
+range_feat_strp_v2 = range_feat_strp.split(',')
+
+print range_feat_strp_v2
+
+bash = 'for i in seq 1 ' + str(range_feat).strip('[]') + '; do pgsql2shp -f $i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
+
+print bash
+
+os.system(bash) 
+	
+
+#os.system('pgsql2shp -f {}.shp -g geom -h 127.0.0.1 -u postgres -p 5432 -P password hamlethurricane "Select * from hurricane_irene where id =  "; done'
+
+
+#rint bash 
+
+#os.system(bash)
 
 #drop_cur.close()
 
