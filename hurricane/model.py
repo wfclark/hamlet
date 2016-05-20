@@ -57,11 +57,20 @@ range_feat_strp = str(range_feat).strip('[]')
 
 range_feat_strp_v2 = range_feat_strp.split(',')
 
-print range_feat_strp_v2
+test = ' ' 
 
-bash = 'for i in seq 1 ' + str(range_feat).strip('[]') + '; do pgsql2shp -f $i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
+for data in range_feat:
+	test += ' ' + str(data)
 
-print bash
+print test
+
+# print range_feat_strp_v2
+
+bash = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
+
+
+
+# print bash
 
 os.system(bash) 
 	
