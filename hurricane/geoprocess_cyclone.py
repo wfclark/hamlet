@@ -17,7 +17,7 @@ except Exception as e:
 
 print "Connected!\n"
 
-hurricane_name = 'SANDY'
+hurricane_name = 'FRAN'
 
 dataframe_cur = conn.cursor()
 
