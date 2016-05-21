@@ -41,6 +41,7 @@ dataframe.columns = colnames
 
 alter_cur = conn.cursor()
 
+#alter_cur.execute("""alter tabke hyrrucabe_katrian add id serial""")
 #alter_cur.execute("""alter table hurricane_katrina add id serial""")
 
 print dataframe
@@ -81,6 +82,30 @@ bash_reconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do ogr2ogr -
 print bash_reconstruct
 
 call(bash_reconstruct, shell = True)
+
+
+for key in range(len(dataframe)):
+	
+	sql = """create or replace view vw_rmw_{} as
+	select ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), (select distinct atc_roci from irene_56)*1069),4326)
+	as wkb_geometry as geom from irene_{} limit 1;""".format(key)
+
+	print sql 
+
+	cur.execute(sql)
+	conn.commit()
+
+for key in range(len(dataframe)):
+	
+	sql = """update table hurricane_katrina 
+	set set a.geom = b.geom from vw_rmw_{}
+	where a.iso_time = b.iso_time""".format(key) 
+
+	print sql 
+
+	cur.execute(sql)
+	conn.commit()
+	
 
 
 
