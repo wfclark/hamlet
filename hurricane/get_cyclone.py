@@ -23,8 +23,8 @@ hurricane_year = '2012'
 
 pull_cur = conn.cursor() 
 
-pull_sql = """'create table hurricane_{} as
-select * from allstormspts_4326 where name = {} and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
+pull_sql = """create table hurricane_{} as
+select * from allstormspts_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
 
 pull_cur.execute(pull_sql) 
 
@@ -59,7 +59,7 @@ bash_syntax = ' '
 for data in range_feat:
 	bash_syntax += ' ' + str(data)
 
-bash_deconstruct = 'for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do pgsql2shp -f hugo_$i.shp hamlethurricane "select * from hurricane_{} where id = $i"; done'.format(hurricane_name)
+bash_deconstruct = 'for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do pgsql2shp -f {}_$i.shp hamlethurricane "select * from hurricane_{} where id = $i"; done'.format(hurricane_name, hurricane_name)
  
 call(bash_deconstruct, shell = True) 
 
