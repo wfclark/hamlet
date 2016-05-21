@@ -69,9 +69,13 @@ select * from hurricane_katrina """)
 
 conn.commit()
 
-alter_cur = conn.cursor()
-
-alter_cur.execute("""alter table hurricane_katrina_geo 
+drop_cur = conn.cursor()
+drop_cur.execute("""alter table hurricane_katrina_geo 
 drop column geom""") 
 
 conn.commit()
+
+add_cur = conn.cursor()
+add_cur = ("""
+alter table hurricane_katrina_geo
+add column geom geometry(polygon, 4326)""")
