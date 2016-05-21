@@ -28,7 +28,7 @@ print "Connected!\n"
 
 dataframe_cur = conn.cursor()
 
-dataframe_cur.execute("""Select * from hurricane_irene""")
+dataframe_cur.execute("""Select * from hurricane_katrina""")
 
 data = dataframe_cur.fetchall()
 
@@ -60,7 +60,7 @@ print test
 
 print range_feat_strp_v2
 
-bash_deconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_irene where id = $i"; done'
+bash_deconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_katrina where id = $i"; done'
 
 print bash
 
@@ -68,20 +68,16 @@ call(bash_deconstruct, shell = True)
 
 print bash_deconstruct
 
-bash_reconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" irene_$i.shp -t_srs EPSG:4326; done'
+bash_reconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" katrina_$i.shp -t_srs EPSG:4326; done'
 
 print bash_reconstruct
 
 call(bash_reconstruct, shell = True)
 
-bash_rm='for i in 1 ' + test + ' ' + str(num_feat) + ' ; do sudo rm irene_$i.* ; done'
+bash_rm='for i in 1 ' + test + ' ' + str(num_feat) + ' ; do sudo rm katrina_$i.* ; done'
 
 call(bash_rm, shell = True)
 
-#os.system('pgsql2shp -f {}.shp -g geom -h 127.0.0.1 -u postgres -p 5432 -P password hamlethurricane "Select * from hurricane_irene where id =  "; done'
-
-
-#rint bash 
 
 #os.system(bash)
 
