@@ -87,3 +87,8 @@ atc_w50_r2 , atc_w50_r3 ,atc_w50_r4 ,atc_w64_r1 ,atc_w64_r2, atc_w64_r3 , atc_w6
   FROM information_schema.tables
  WHERE table_schema='public'
    AND table_type='BASE TABLE';
+   
+create table hurricane_hugo as
+select * from allstormspts_4326 where name = 'HUGO' and season = 1989
+
+alter table hurricane_hugo add column id serial 
