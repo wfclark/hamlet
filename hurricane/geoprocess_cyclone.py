@@ -48,6 +48,43 @@ bash_syntax = ' '
 for data in range_feat:
 	bash_syntax += ' ' + str(data)
 
+drop_if_geo_sql = """drop table if exists hurricane_{}_geo""".format(hurricane_name)
+
+drop_if_geo_cur = conn.cursor()
+
+drop_if_geo_cur.execute(drop_if_geo_sql)
+
+creation_cur = conn.cursor()
+
+creation_sql = """create table hurricane_{}_geo as 
+select * from hurricane_{}""".format(hurricane_name,hurricane_name)
+
+creation_cur.execute(creation_sql)
+
+
+conn.commit()
+
+drop_cur = conn.cursor()
+
+drop_sql = """alter table hurricane_{}_geo 
+drop column geom""".format(hurricane_name)
+
+drop_cur.execute(drop_sql) 
+
+conn.commit()
+
+add_cur = conn.cursor()
+
+add_sql = """
+alter table hurricane_{}_geo
+add column geom geometry(polygon, 4326)""".format(hurricane_name)
+
+add_cur.execute(add_sql)
+
+conn.commit()
+
+buffer_cur = conn.cursor() 
+
 for key in range(1,len(dataframe)-1):
 	
 	sql = """create or replace view vw_rmw_{} as
