@@ -17,16 +17,24 @@ except Exception as e:
 
 print "Connected!\n"
 
-hurricane_name = 'SANDY'
+hurricane_name = 'FRAN'
 
-hurricane_year = '2012'
+hurricane_year = '1996'
 
 pull_cur = conn.cursor() 
+ 
+drop_exists_sql = """drop table if exists hurricane_{} cascade""".format(hurricane_name)
+
+pull_cur.execute(drop_exists_sql)
 
 pull_sql = """create table hurricane_{} as
 select * from allstormspts_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
 
 pull_cur.execute(pull_sql) 
+
+alter_og_sql = """alter table hurricane_{} add column id serial""".format(hurricane_name)
+
+pull_cur.execute(alter_og_sql)
 
 conn.commit() 
 
@@ -59,42 +67,16 @@ bash_syntax = ' '
 for data in range_feat:
 	bash_syntax += ' ' + str(data)
 
-bash_deconstruct = 'for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do pgsql2shp -f {}_$i.shp hamlethurricane "select * from hurricane_{} where id = $i"; done'.format(hurricane_name, hurricane_name)
+bash_deconstruct = 'for i in ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do pgsql2shp -f {}_$i.shp hamlethurricane "select * from hurricane_{} where id = $i"; done'.format(hurricane_name, hurricane_name)
  
 call(bash_deconstruct, shell = True) 
 
 print bash_deconstruct
 
-bash_reconstruct = 'for i in ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_$i.shp -t_srs EPSG:4326; done'.format(hurricane_name)
+bash_reconstruct = 'for i in ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_$i.shp -t_srs EPSG:4326 -overwrite; done'.format(hurricane_name)
 
 print bash_reconstruct
 
 call(bash_reconstruct, shell = True)
-
-creation_cur = conn.cursor()
-
-creation_sql = """create table hurricane_{}_geo as 
-select * from hurricane_katrina """.format(hurricane_name)
-
-creation_cur.execute(creation_cur)
-
-conn.commit()
-
-drop_cur = conn.cursor()
-
-drop_sql = """alter table hurricane_{}_geo 
-drop column geom""".format(hurricane_name)
-
-drop_cur.execute(drop_sql) 
-
-conn.commit()
-
-add_cur = conn.cursor()
-
-add_sql = """
-alter table hurricane_{}_geo
-add column geom geometry(polygon, 4326)""".format(hurricane_name)
-
-conn.commit()
 
 conn.close()
