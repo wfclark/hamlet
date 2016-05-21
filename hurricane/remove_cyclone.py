@@ -17,10 +17,13 @@ except Exception as e:
 
 print "Connected!\n"
 
+hurricane_name = 'SANDY'
 
 dataframe_cur = conn.cursor()
 
-dataframe_cur.execute("""Select * from hurricane_hugo""")
+dataframe_sql = """Select * from hurricane_{}""".format(hurricane_name)
+
+dataframe_cur.execute(dataframe_sql)
 
 data = dataframe_cur.fetchall()
 
@@ -45,9 +48,6 @@ bash_syntax = ' '
 for data in range_feat:
 	bash_syntax += ' ' + str(data)
 
-clear up file run on clean runs  
-
-bash_rm='for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do sudo rm katrina_$i.* ; done'
+bash_rm='for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do sudo rm {}_$i.* ; done'.format(hurricane_name)
 
 call(bash_rm, shell = True)
-
