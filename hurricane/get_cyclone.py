@@ -61,3 +61,17 @@ bash_reconstruct = 'for i in 1 ' + bash_syntax + ' ' + str(num_feat) + ' ; do og
 print bash_reconstruct
 
 call(bash_reconstruct, shell = True)
+
+creation_cur = conn.cursor()
+
+creation_cur.execute("""create table hurricane_katrina_geo as 
+select * from hurricane_katrina """)
+
+conn.commit()
+
+alter_cur = conn.cursor()
+
+alter_cur.execute("""alter table hurricane_katrina_geo 
+drop column geom""") 
+
+conn.commit()
