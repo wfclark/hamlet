@@ -49,12 +49,14 @@ update_cur = conn.cursor()
 
 for key in range(1, len(dataframe) + 1):
 	
- 	sql = """update table hurricane_katrina 
- 	set set a.geom = b.geom from vw_rmw_{}
+ 	sql = """update hurricane_katrina_geo as a
+ 	set geom = b.geom 
+ 	from vw_rmw_{} as b
  	where a.iso_time = b.iso_time""".format(key) 
 
  	print sql 
 
  	update_cur.execute(sql)
  	conn.commit()
+ 	
 conn.close()
