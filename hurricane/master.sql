@@ -83,5 +83,7 @@ select gid, serial_num, season, basin, sub_basin, name, iso_time, wmo_wind, wmo_
 atc_rmw , atc_poci , atc_roci , atc_eye , atc_w34_r1 , atc_w34_r2 , atc_w34_r3 , atc_w34_r4 ,atc_w50_r1 ,
 atc_w50_r2 , atc_w50_r3 ,atc_w50_r4 ,atc_w64_r1 ,atc_w64_r2, atc_w64_r3 , atc_w64_r4, geom from allstormspts_4326 where name = 'KATRINA' and season = '2005'
 
- 
-
+ SELECT table_name
+  FROM information_schema.tables
+ WHERE table_schema='public'
+   AND table_type='BASE TABLE';
