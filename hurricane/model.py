@@ -13,6 +13,7 @@ from subprocess import call, Popen
 
 #os.system("tar xvf last_1_hours.tar")
 
+
 conn_string = "dbname='hamlethurricane' user=postgres port='5432' host='127.0.0.1' password='password'"
 
 print "Connecting to database..."
@@ -38,7 +39,10 @@ dataframe = pandas.DataFrame(data)
 
 dataframe.columns = colnames
 
-print data
+alter_cur = conn.cursor()
+
+#alter_cur.execute("""alter table hurricane_katrina add id serial""")
+
 print dataframe
 
 conn.commit()
@@ -56,13 +60,17 @@ test = ' '
 for data in range_feat:
 	test += ' ' + str(data)
 
+#clear up file run on clean runs  
+
 print test
+
+bash_rm='for i in 1 ' + test + ' ' + str(num_feat) + ' ; do sudo rm katrina_$i.* ; done'
+
+#call(bash_rm, shell = True)
 
 print range_feat_strp_v2
 
-bash_deconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f irene_$i.shp hamlethurricane "select * from hurricane_katrina where id = $i"; done'
-
-print bash
+bash_deconstruct = 'for i in 1 ' + test + ' ' + str(num_feat) + ' ; do pgsql2shp -f katrina_$i.shp hamlethurricane "select * from hurricane_katrina where id = $i"; done'
 
 call(bash_deconstruct, shell = True) 
 
@@ -74,9 +82,6 @@ print bash_reconstruct
 
 call(bash_reconstruct, shell = True)
 
-bash_rm='for i in 1 ' + test + ' ' + str(num_feat) + ' ; do sudo rm katrina_$i.* ; done'
-
-call(bash_rm, shell = True)
 
 
 #os.system(bash)
