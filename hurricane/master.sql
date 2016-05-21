@@ -34,3 +34,54 @@ select a.gid, st_union(a.geom,b.geom) ::geometry(polygon,4326) as geom from vw_q
 create or replace view vw_quadrent_1234 as
 select a.gid, st_union(a.geom,b.geom) ::geometry(polygon,4326) as geom from vw_quadrent_12 as a, vw_quadrent_34 as b;
 
+--Start quadrent buffer---------
+create or replace view vw_quadrent_1 as 
+select ogc_food st_buffer(wkb_geometry, (select distinct atc_rmw from irene_49))::geometry(polygon,4326) 
+as geom from irene_49;
+
+create or replace view vw_quadrent_2 as
+select ogc_fid, st_buffer(wkb_geometry, (select distinct atc_w34_r2 from irene_49))::geometry(polygon,4326) 
+as wkb_geometry from irene_49 limit 1;
+
+create or replace view vw_quadrent_3 as
+select ogc_fid, st_buffer(wkb_geometry, (select distinct atc_w34_r3 from irene_49))::geometry(polygon,4326) 
+as wkb_geometry from irene_49 limit 1;
+
+create or replace view vw_quadrent_4 as
+select ogc_fid, st_buffer(st_transform(wkb_geometry, 32612), (select distinct atc_w34_r4 from irene_49))::geometry(polygon,4326) 
+as wkb_geometry from irene_49 limit 1;
+
+create or replace view vw_quadrent_12 as
+select st_union(a.wkb_geometry,b.wkb_geometry) ::geometry(polygon,4326) as wkb_geometry 
+from vw_quadrent_1 as a, vw_quadrent_2 as b;
+
+create or replace view vw_quadrent_34 as
+select st_union(a.wkb_geometry,b.wkb_geometry) ::geometry(polygon,4326) as wkb_geometry 
+from vw_quadrent_3 as a, vw_quadrent_4 as b;
+
+create or replace view vw_quadrent_1234 as
+select st_union(a.wkb_geometry,b.wkb_geometry) ::geometry(polygon,4326) as wkb_geometry 
+from vw_quadrent_12 as a, vw_quadrent_34 as b;
+
+create or replace view vw_quadrent_rmw_v5 as
+select ogc_fid, st_buffer(st_transform(wkb_geometry,32612), (select distinct atc_rmw from irene_56)*1069)
+as wkb_geometry from irene_45 limit 1;
+
+--Max Wind Radius buffer------
+
+create or replace view vw_quadrent_rmw_v6_4326 as 
+select ogc_fid, st_transform(wkb_geometry, 4326)::geometry(polygon, 4326) as geom from vw_quadrent_rmw_v5
+
+--radii of closed iso bar buffer---
+create or replace view vw_quadrent_rmw_v7 as
+select ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), (select distinct atc_roci from irene_56)*1069),4326)
+as wkb_geometry from irene_48 limit 1;
+
+
+create table hurricane_katrina as
+select gid, serial_num, season, basin, sub_basin, name, iso_time, wmo_wind, wmo_pres, 'wmo_wind_%' as wmo_wind_radii , 
+atc_rmw , atc_poci , atc_roci , atc_eye , atc_w34_r1 , atc_w34_r2 , atc_w34_r3 , atc_w34_r4 ,atc_w50_r1 ,
+atc_w50_r2 , atc_w50_r3 ,atc_w50_r4 ,atc_w64_r1 ,atc_w64_r2, atc_w64_r3 , atc_w64_r4, geom from allstormspts_4326 where name = 'KATRINA' and season = '2005'
+
+ 
+
