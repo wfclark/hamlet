@@ -77,7 +77,8 @@ add_cur = conn.cursor()
 
 add_sql = """
 alter table hurricane_{}_geo
-add column geom geometry(polygon, 4326)""".format(hurricane_name)
+add column geom geometry(polygon, 4326), 
+add column impact_dollars numeric""".format(hurricane_name)
 
 add_cur.execute(add_sql)
 
@@ -88,12 +89,30 @@ buffer_cur = conn.cursor()
 for key in range(1,len(dataframe)-1):
 	
 	sql = """create or replace view vw_rmw_{} as
-	select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), (select distinct atc_roci from {}_{})*1069),4326)::geometry(polygon, 4326) as geom from {}_{} limit 1;""".format(key, hurricane_name, key, hurricane_name, key)
+	select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+	(select distinct atc_roci from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+	from {}_{} limit 1;""".format(key, hurricane_name, key, hurricane_name, key)
 
 	print sql 
 
 	buffer_cur.execute(sql)
 	conn.commit()
+
+
+intersect_cur = conn.cursor()
+
+for key in range(1,len(dataframe)-1):
+	
+	sql = """create or replace view vw_impact_{} as
+	select a.iso_time, b.ogc_fid, a.sum(appraised), geom as impact 
+	from nc_parcels as a join vw_rmw_{} as b  
+	on st_intersects(a.geom,b.geom);""".format(key)
+
+	print sql 
+
+	buffer_cur.execute(sql)
+	conn.commit()
+
 
 update_cur = conn.cursor() 
 
@@ -108,5 +127,30 @@ for key in range(1, len(dataframe)-1):
 
  	update_cur.execute(sql)
  	conn.commit()
- 	
+ 
+for key in range(1, len(dataframe)-1):
+	
+ 	sql = """update hurricane_{}_geo as a
+ 	set impact = b.impact
+ 	from vw_impact_{} as b
+ 	where a.iso_time = b.iso_time""".format(hurricane_name, key) 
+
+ 	print sql 
+
+ 	update_cur.execute(sql)
+ 	conn.commit()
+
+drop_dismembered_cur = conn.cursor() 
+
+for key in range(1, len(dataframe)-1):
+	
+ 	sql = """drop table if exists {}_{} cascade""".format(hurricane_name, key) 
+
+ 	print sql 
+
+ 	drop_dismembered_cur.execute(sql)
+ 	conn.commit() 
+
+
+
 conn.close()
