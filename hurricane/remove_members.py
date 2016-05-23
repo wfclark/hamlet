@@ -17,7 +17,26 @@ except Exception as e:
 
 print "Connected!\n"
 
-hurricane_name = 'SANDY'
+hurricane_name = 'ARTHUR'
+
+hurricane_year = '2014'
+
+pull_cur = conn.cursor() 
+ 
+drop_exists_sql = """drop table if exists hurricane_{} cascade""".format(hurricane_name)
+
+pull_cur.execute(drop_exists_sql)
+
+pull_sql = """create table hurricane_{} as
+select * from allpoints_lines_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
+
+pull_cur.execute(pull_sql) 
+
+alter_og_sql = """alter table hurricane_{} add column id serial""".format(hurricane_name)
+
+pull_cur.execute(alter_og_sql)
+
+conn.commit() 
 
 dataframe_cur = conn.cursor()
 
@@ -43,11 +62,8 @@ range_feat_strp_v2 = range_feat_strp.split(',')
 
 print range_feat_strp_v2
 
-bash_syntax = ' ' 
-
-for data in range_feat:
-	bash_syntax += ' ' + str(data)
-
-bash_rm='for i in 1 ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do sudo rm {}_$i.* ; done'.format(hurricane_name)
-
-call(bash_rm, shell = True)
+for key in range(1,len(dataframe)-1):
+	
+	remove_members = 'sudo rm {}_{}.*'.format(hurricane_name, key)
+	print remove_members
+	os.system(remove_members)
