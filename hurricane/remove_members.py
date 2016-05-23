@@ -19,25 +19,6 @@ print "Connected!\n"
 
 hurricane_name = 'ARTHUR'
 
-hurricane_year = '2014'
-
-pull_cur = conn.cursor() 
- 
-drop_exists_sql = """drop table if exists hurricane_{} cascade""".format(hurricane_name)
-
-pull_cur.execute(drop_exists_sql)
-
-pull_sql = """create table hurricane_{} as
-select * from allpoints_lines_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
-
-pull_cur.execute(pull_sql) 
-
-alter_og_sql = """alter table hurricane_{} add column id serial""".format(hurricane_name)
-
-pull_cur.execute(alter_og_sql)
-
-conn.commit() 
-
 dataframe_cur = conn.cursor()
 
 dataframe_sql = """Select * from hurricane_{}""".format(hurricane_name)
