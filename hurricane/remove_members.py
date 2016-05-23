@@ -5,17 +5,15 @@ import psycopg2
 import pandas
 from subprocess import call, Popen
 
-conn_string = "dbname='hamlethurricane' user=postgres port='5432' host='127.0.0.1' password='password'"
+print "removing temporary files..."
 
-print "Connecting to database..."
+conn_string = "dbname='hamlethurricane' user=postgres port='5432' host='127.0.0.1' password='password'"
 
 try:
 	conn = psycopg2.connect(conn_string)
 except Exception as e:
 	print str(e)
 	sys.exit()
-
-print "Connected!\n"
 
 os.system('exit')
 
@@ -43,10 +41,9 @@ range_feat_strp = str(range_feat).strip('[]')
 
 range_feat_strp_v2 = range_feat_strp.split(',')
 
-print range_feat_strp_v2
-
 for key in range(1,len(dataframe)):
 	
 	remove_members = 'sudo rm {}_{}.*'.format(hurricane_name, key)
-	print remove_members
 	os.system(remove_members)
+
+print "finish"
