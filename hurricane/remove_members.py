@@ -17,6 +17,8 @@ except Exception as e:
 
 print "Connected!\n"
 
+os.system('exit')
+
 hurricane_name = 'ARTHUR'
 
 dataframe_cur = conn.cursor()
@@ -43,7 +45,7 @@ range_feat_strp_v2 = range_feat_strp.split(',')
 
 print range_feat_strp_v2
 
-for key in range(1,len(dataframe)-1):
+for key in range(1,len(dataframe)):
 	
 	remove_members = 'sudo rm {}_{}.*'.format(hurricane_name, key)
 	print remove_members
