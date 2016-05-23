@@ -75,4 +75,4 @@ for key in range(1,len(dataframe)-1):
 	reconstruct = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_{}.shp -t_srs EPSG:4326 -overwrite; done'.format(hurricane_name, key)
 	os.system(reconstruct)
 
-print "Individual members of the hurricane are now seperate and reaggregated into a spatially enabled database..."
+print "Individual members of the hurricane are now seperate \nand reaggregated into a spatially enabled database..."
