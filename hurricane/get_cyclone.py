@@ -17,9 +17,9 @@ except Exception as e:
 
 print "Connected!\n"
 
-hurricane_name = 'FRAN'
+hurricane_name = 'ARTHUR'
 
-hurricane_year = '1996'
+hurricane_year = '2014'
 
 pull_cur = conn.cursor() 
  
