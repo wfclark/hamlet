@@ -43,14 +43,6 @@ range_feat_strp_v2 = range_feat_strp.split(',')
 
 print range_feat_strp_v2
 
-drop_if_geo_sql = """drop table if exists hurricane_{}_geo""".format(hurricane_name)
-
-drop_if_geo_cur = conn.cursor()
-
-drop_if_geo_cur.execute(drop_if_geo_sql)
-
-drop_dismembered_cur = conn.cursor() 
-
 for key in range(1, len(dataframe)-1):
 	
  	sql = """drop table if exists {}_{} cascade""".format(hurricane_name, key) 
