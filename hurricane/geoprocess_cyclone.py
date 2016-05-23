@@ -17,7 +17,7 @@ except Exception as e:
 
 print "Connected!\n"
 
-hurricane_name = 'FRAN'
+hurricane_name = 'ARTHUR'
 
 dataframe_cur = conn.cursor()
 
@@ -78,7 +78,7 @@ add_cur = conn.cursor()
 add_sql = """
 alter table hurricane_{}_geo
 add column geom geometry(polygon, 4326), 
-add column impact_dollars numeric""".format(hurricane_name)
+add column impact numeric""".format(hurricane_name)
 
 add_cur.execute(add_sql)
 
@@ -90,7 +90,7 @@ for key in range(1,len(dataframe)-1):
 	
 	sql = """create or replace view vw_rmw_{} as
 	select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
-	(select distinct atc_roci from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+	(select distinct atc_rmw from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
 	from {}_{} limit 1;""".format(key, hurricane_name, key, hurricane_name, key)
 
 	print sql 
@@ -104,13 +104,13 @@ intersect_cur = conn.cursor()
 for key in range(1,len(dataframe)-1):
 	
 	sql = """create or replace view vw_impact_{} as
-	select a.iso_time, b.ogc_fid, a.sum(appraised), geom as impact 
-	from nc_parcels as a join vw_rmw_{} as b  
-	on st_intersects(a.geom,b.geom);""".format(key)
+	select b.iso_time, b.ogc_fid, sum(parval) as impact, a.geom::geometry(polygon, 4326) as geom 
+	from dare_4326 as a join vw_rmw_{} as b on st_intersects(a.geom,b.geom)
+	group by b.iso_time, b.ogc_fid, a.geom;""".format(key, key)
 
 	print sql 
 
-	buffer_cur.execute(sql)
+	intersect_cur.execute(sql)
 	conn.commit()
 
 
