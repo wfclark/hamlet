@@ -40,13 +40,8 @@ range_feat =  range(len(dataframe))
 range_feat_strp = str(range_feat).strip('[]')
 
 range_feat_strp_v2 = range_feat_strp.split(',')
-
-print range_feat_strp_v2
-
-bash_syntax = ' ' 
-
-for data in range_feat:
-	bash_syntax += ' ' + str(data)
+print
+ range_feat_strp_v2
 
 drop_if_geo_sql = """drop table if exists hurricane_{}_geo""".format(hurricane_name)
 
@@ -139,18 +134,3 @@ for key in range(1, len(dataframe)-1):
 
  	update_cur.execute(sql)
  	conn.commit()
-
-drop_dismembered_cur = conn.cursor() 
-
-for key in range(1, len(dataframe)-1):
-	
- 	sql = """drop table if exists {}_{} cascade""".format(hurricane_name, key) 
-
- 	print sql 
-
- 	drop_dismembered_cur.execute(sql)
- 	conn.commit() 
-
-
-
-conn.close()
