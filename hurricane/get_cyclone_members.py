@@ -21,14 +21,16 @@ hurricane_name = 'ARTHUR'
 
 hurricane_year = '2014'
 
+print "This model is being ran for" + hurricane_name + 'in the season of' + hurricane_year
+
 pull_cur = conn.cursor() 
  
-drop_exists_sql = """drop table if exists hurricane_{} cascade""".format(hurricane_name)
+drop_if_sql = """drop table if exists hurricane_{} cascade""".format(hurricane_name)
 
-pull_cur.execute(drop_exists_sql)
+pull_cur.execute(drop_if_sql)
 
 pull_sql = """create table hurricane_{} as
-select * from allstorms_lines_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
+			  select * from allstorms_lines_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
 
 pull_cur.execute(pull_sql) 
 
@@ -60,16 +62,17 @@ range_feat_strp = str(range_feat).strip('[]')
 
 range_feat_strp_v2 = range_feat_strp.split(',')
 
-print range_feat_strp_v2
+print "There are" + str(range_feat) + 'features in Hurricane'.format(hurricane_name)
 
 for key in range(1,len(dataframe)-1):
 	
 	deconstruct = 'pgsql2shp -f {}_{}.shp hamlethurricane "select * from hurricane_{} where id = {}";'.format(hurricane_name, key, hurricane_name, key)
-	print deconstruct
 	os.system(deconstruct)
+
 
 for key in range(1,len(dataframe)-1):
 	
 	reconstruct = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_{}.shp -t_srs EPSG:4326 -overwrite; done'.format(hurricane_name, key)
-	print reconstruct
 	os.system(reconstruct)
+
+print "Individual members of the hurricane are now seperate and reaggregated into a spatially enabled database..."
