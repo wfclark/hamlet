@@ -45,11 +45,11 @@ range_feat_strp = str(range_feat).strip('[]')
 range_feat_strp_v2 = range_feat_strp.split(',')
 print range_feat_strp_v2
 
-drop_if_geo_sql = """drop table if exists hurricane_{}_geo""".format(hurricane_name)
+drop_if_sql = """drop table if exists hurricane_{}_geo""".format(hurricane_name)
 
-drop_if_geo_cur = conn.cursor()
+drop_if_cur = conn.cursor()
 
-drop_if_geo_cur.execute(drop_if_geo_sql)
+drop_if_cur.execute(drop_if_sql)
 
 creation_cur = conn.cursor()
 
