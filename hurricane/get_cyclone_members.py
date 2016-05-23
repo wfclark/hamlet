@@ -28,7 +28,7 @@ drop_exists_sql = """drop table if exists hurricane_{} cascade""".format(hurrica
 pull_cur.execute(drop_exists_sql)
 
 pull_sql = """create table hurricane_{} as
-select * from allstormspts_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
+select * from allstorms_lines_4326 where name = '{}' and season = {}""".format(hurricane_name, hurricane_name, hurricane_year)
 
 pull_cur.execute(pull_sql) 
 
@@ -62,21 +62,14 @@ range_feat_strp_v2 = range_feat_strp.split(',')
 
 print range_feat_strp_v2
 
-bash_syntax = ' ' 
+for key in range(1,len(dataframe)-1):
+	
+	deconstruct = 'pgsql2shp -f {}_{}.shp hamlethurricane "select * from hurricane_{} where id = {}";'.format(hurricane_name, key, hurricane_name, key)
+	print deconstruct
+	os.system(deconstruct)
 
-for data in range_feat:
-	bash_syntax += ' ' + str(data)
-
-bash_deconstruct = 'for i in ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do pgsql2shp -f {}_$i.shp hamlethurricane "select * from hurricane_{} where id = $i"; done'.format(hurricane_name, hurricane_name)
- 
-call(bash_deconstruct, shell = True) 
-
-print bash_deconstruct
-
-bash_reconstruct = 'for i in ' + bash_syntax + ' ' + str(range_feat_strp_v2) + ' ; do ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_$i.shp -t_srs EPSG:4326 -overwrite; done'.format(hurricane_name)
-
-print bash_reconstruct
-
-call(bash_reconstruct, shell = True)
-
-conn.close()
+for key in range(1,len(dataframe)-1):
+	
+	reconstruct = 'ogr2ogr -f "PostgreSQL" PG:"user=postgres dbname=hamlethurricane password=password" {}_{}.shp -t_srs EPSG:4326 -overwrite; done'.format(hurricane_name, key)
+	print reconstruct
+	os.system(reconstruct)
