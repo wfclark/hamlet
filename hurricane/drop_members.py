@@ -43,6 +43,8 @@ range_feat_strp_v2 = range_feat_strp.split(',')
 
 print range_feat_strp_v2
 
+drop_dismembered_cur = conn.cursor()
+
 for key in range(1, len(dataframe)-1):
 	
  	sql = """drop table if exists {}_{} cascade""".format(hurricane_name, key) 
@@ -55,3 +57,4 @@ for key in range(1, len(dataframe)-1):
 
 
 conn.close()
+
