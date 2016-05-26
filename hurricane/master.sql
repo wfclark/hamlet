@@ -92,3 +92,67 @@ create table hurricane_hugo as
 select * from allstormspts_4326 where name = 'HUGO' and season = 1989
 
 alter table hurricane_hugo add column id serial 
+
+
+create or replace view vw_w34_r1
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w34_r1 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w34_r2 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w34_r3 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w34_r4 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+
+----------------------------------------------------------------------------------------------------------
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w50_r1 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w50_r2 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w50_r3 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w50_r4 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+-----------------------------------------------------------------------------------------------------------
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w64_r1 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w64_r2 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w64_r3 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
+
+
+select iso_time, ogc_fid, st_transform(st_buffer(st_transform(wkb_geometry,32612), 
+(select distinct atc_w64_r4 from {}_{})*1069),4326)::geometry(polygon, 4326) as geom 
+from {}_{} limit 1;
