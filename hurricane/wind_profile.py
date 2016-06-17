@@ -10,9 +10,10 @@ from subprocess import call, Popen
 import pandas as pd
 import gzip
 import csv
-import zipfile as z
 import numpy as np
-from decimal import *
+import decimal
+from mpmath import mp
+
 
 df = pd.read_csv('hurricane_test_v2.dat.gz', compression = 'gzip', sep=',' , error_bad_lines=False)
 
@@ -50,7 +51,11 @@ A = int(Rmax_float)**int(B)
 print Rmax_float
 print B
 
+
+wind_speed = []
+
 print range(1,int(roci_float))
 
 for i in range(1,int(roci_float)):
-	Vg = (A*B*(pn - pc_float)*math.exp(-A/i**B))/(((rho*i**B + i**2*f**2)/4))**1/2)-(i * f/2)
+	Vg = (mp.sqrt(((A*B*(pn - int(pc_float)))*mp.exp(int(-A)/int(i)**int(B))/((((int(rho)*int(i)**int(B) + int(i)**2*int(f)**2)/4))))) - (int(i)* int(f)/2))
+	print Vg
