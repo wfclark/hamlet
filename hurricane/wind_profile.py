@@ -14,6 +14,7 @@ import numpy as np
 import decimal
 from mpmath import mp
 import matplotlib.pyplot as plt
+import matplotlib 
 
 
 df = pd.read_csv('hurricane_test_v2.dat.gz', compression = 'gzip', sep=',' , error_bad_lines=False)
@@ -73,5 +74,15 @@ df_radius = pd.DataFrame(radius_roci)
 plot_dataframe = pd.DataFrame({'Radius' : radius_roci, 'Windspeed' : wind_speed})
 
 print plot_dataframe
+print datetime
+print forecast_time
 
-plot_dataframe.plot()
+plt.figure()
+
+wind_speed_plot = plot_dataframe.plot(x ='Radius', y='Windspeed', label = 'Computer Wind Speed (m/s)'); plt.legend(loc ='best')
+
+wind_speed_plot.set_ylabel('Wind Speed (m/s)')
+
+plt.show()
+
+import matplotlib.pyplot as plt
